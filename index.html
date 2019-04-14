@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Land Capability Verification Editor</title>
+    <style>
+      html, body, #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/themes/dark/main.css">
+    <script src="https://js.arcgis.com/4.11/"></script>
+    <script>
+        require([
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/widgets/BasemapToggle",
+            "esri/widgets/BasemapGallery",
+            "esri/widgets/Search",
+            "esri/layers/FeatureLayer",
+            "esri/widgets/Editor",
+            "esri/layers/TileLayer",
+            "esri/widgets/LayerList"
+            ], 
+                
+        function(Map, MapView, BasemapToggle, BasemapGallery, Search, FeatureLayer, Editor, TileLayer, LayerList) {
+            
+            var map = new Map({
+                basemap: "topo-vector"
+                
+            });
+
+            var view = new MapView({
+                container: "viewDiv",
+                map: map,
+                center: [-120.0324,39.05],
+                zoom: 9
+            });
+                        
+            var search = new Search({
+                view: view
+            });
+
+            view.ui.add(search, "top-left"); // Add to the view
+            
+            var hillshadeLayer = new TileLayer({
+                url: "https://maps.trpa.org/server/rest/services/Tahoe_Hillshade_cached/MapServer"
+            });
+            
+            // Add the layer
+            map.add(hillshadeLayer);
+                        
+            // Define a popup for Trails
+            var popupParcels = {
+                "title": "Parcel Information",
+                "content": function(){
+                   return "This is {APN}";
+                }
+              }
+
+            // Create the layer and set the renderer
+            var parcels = new FeatureLayer({
+                url: "https://maps.trpa.org/server/rest/services/Parcels/MapServer/0",
+                outFields: ["*"],
+                popupTemplate: popupParcels
+            });
+
+            // Add the layer
+            map.add(parcels,0);
+            
+            // Add the parcels layer as a search source
+            search.sources.push({
+              featureLayer: parcels,
+              searchFields: ["APN"],
+              displayField: "APN",
+              exactMatch: false,
+              outFields: ["APN"],
+              resultGraphicEnabled: true,
+              name: "Parcel APN",
+              placeholder: "APN",
+            });
+            
+            var editor = new Editor({
+              view: view
+            });
+
+            view.ui.add(editor, "top-right");
+            
+            var layerList = new LayerList({
+                view: view
+            });
+            
+            // Adds widget below other elements in the top right corner of the view
+            view.ui.add(layerList, {
+                position: "top-right"
+            });
+            
+            view.ui.move("zoom", "top-left");
+            
+//            var basemapToggle = new BasemapToggle({
+//                view: view,
+//                secondMap: "satellite"
+//            });
+//            
+//            view.ui.add(basemapToggle, "bottom-right"); // Add to the view
+            
+//             var basemapGallery = new BasemapGallery({
+//                view: view,
+//                source: {
+//                  portal: {
+//                    url: "https://www.arcgis.com",
+//                    useVectorBasemaps: true  // Load vector tile basemaps
+//                  }
+//                }
+//              });
+//            
+//            view.ui.add(basemapGallery, "top-right"); // Add to the view
+            
+      });
+    </script>
+  </head>
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>
