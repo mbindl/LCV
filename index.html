@@ -12,7 +12,7 @@
         width: 100%;
       }
     </style>
-    <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/themes/dark/main.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/themes/dark-blue/main.css">
     <script src="https://js.arcgis.com/4.11/"></script>
     <script>
         require([
@@ -27,10 +27,11 @@
             "esri/widgets/LayerList",
             "esri/widgets/Home",
             "esri/widgets/Legend",
-            "esri/WebMap"
+            "esri/WebMap",
+            "esri/widgets/Print"
             ], 
                 
-        function(Map, MapView, BasemapToggle, BasemapGallery, Search, FeatureLayer, Editor, TileLayer, LayerList, Home, Legend, WebMap) {
+        function(Map, MapView, BasemapToggle, BasemapGallery, Search, FeatureLayer, Editor, TileLayer, LayerList, Home, Legend, WebMap, Print) {
             
             var map = new Map({
                 basemap: "topo-vector"
@@ -51,7 +52,8 @@
             view.ui.add(search, "top-left"); // Add to the view
             
             var hillshadeLayer = new TileLayer({
-                url: "https://maps.trpa.org/server/rest/services/Tahoe_Hillshade_cached/MapServer"
+                url: "https://maps.trpa.org/server/rest/services/Tahoe_Hillshade_cached/MapServer",
+                opacity: 0.75
             });
             
             // Add the layer
@@ -121,8 +123,33 @@
                 ]
               });
 
-            // Add widget to the bottom right corner of the view
+            // Add Legend to the bottom right corner of the view
             view.ui.add(legend, "bottom-left");
+            
+            // function to instiante print service
+            view.when(function() {
+                var print = new Print({
+                view: view,
+                // specify your own print service
+                printServiceUrl: "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
+            });
+
+            // Add widget to the top right corner of the view
+            view.ui.add(print, "top-right");
+            });
+            
+            
+            // Create an Expand instance and set the content
+            // property to the DOM node of the basemap gallery widget
+
+            var bgExpand = new Expand({
+              view: view,
+              content: basemapGallery
+            });
+
+            // Add the expand instance to the ui
+
+            view.ui.add(bgExpand, "top-right");
 
 //            var basemapToggle = new BasemapToggle({
 //                view: view,
