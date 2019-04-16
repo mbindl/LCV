@@ -29,10 +29,11 @@
             "esri/widgets/Home",
             "esri/widgets/Legend",
             "esri/WebMap",
-            "esri/widgets/Print"
+            "esri/widgets/Print",
+            "esri/widgets/AreaMeasurement2D"
             ], 
                 
-        function(Map, MapView, Expand, BasemapToggle, BasemapGallery, Search, FeatureLayer, Editor, TileLayer, LayerList, Home, Legend, WebMap, Print) {
+        function(Map, MapView, Expand, BasemapToggle, BasemapGallery, Search, FeatureLayer, Editor, TileLayer, LayerList, Home, Legend, WebMap, Print, AreaMeasurement2D) {
             
             var map = new Map({
                 basemap: "topo-vector"
@@ -42,8 +43,8 @@
             var view = new MapView({
                 container: "viewDiv",
                 map: map,
-                center: [-120.0324,39.05],
-                zoom: 9
+                center: [-120.0325,39.0],
+                zoom: 10
             });
                         
             var search = new Search({
@@ -110,6 +111,22 @@
             
             view.ui.add(layerListExpand, "top-right");
             
+            // To add the AreaMeasurement2D widget to your map
+            var measurementWidget = new AreaMeasurement2D({
+                container: document.createElement("div"),
+                view: view
+            });
+            
+            var measureExpand = new Expand({
+                expandIconClass: "esri-icon-polygon",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
+                // expandTooltip: "Expand LayerList", // optional, defaults to "Expand" for English locale
+                view: view,
+                content: measurementWidget.domNode
+            });
+            
+            view.ui.add(measureExpand, "top-right");
+            
+            // move zoom buttons to top left
             view.ui.move("zoom", "top-left");
             
             var homeWidget = new Home({
@@ -141,18 +158,19 @@
             view.ui.add(legendExpand, "bottom-left");
             
             // function to instiante print service
-            var printer = view.when(function() {
+            view.when(function() {
                 var print = new Print({
-                view: view,
-                // specify your own print service
-                printServiceUrl: "https://ARCPROD.TRPA.ORG/server/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
+                    container: document.createElement("div"),
+                    view: view,
+                    // specify your own print service
+                    printServiceUrl: "https://ARCPROD.TRPA.ORG/server/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
             });
                 
             var printExpand = new Expand({
                 expandIconClass: "esri-icon-printer",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
                 // expandTooltip: "Expand LayerList", // optional, defaults to "Expand" for English locale
                 view: view,
-                content: printer.domNode
+                content: print.domNode
                 });
 
             // Add widget to the top right corner of the view
