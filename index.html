@@ -18,6 +18,7 @@
         require([
             "esri/Map",
             "esri/views/MapView",
+            "esri/widgets/Expand",
             "esri/widgets/BasemapToggle",
             "esri/widgets/BasemapGallery",
             "esri/widgets/Search",
@@ -31,7 +32,7 @@
             "esri/widgets/Print"
             ], 
                 
-        function(Map, MapView, BasemapToggle, BasemapGallery, Search, FeatureLayer, Editor, TileLayer, LayerList, Home, Legend, WebMap, Print) {
+        function(Map, MapView, Expand, BasemapToggle, BasemapGallery, Search, FeatureLayer, Editor, TileLayer, LayerList, Home, Legend, WebMap, Print) {
             
             var map = new Map({
                 basemap: "topo-vector"
@@ -96,13 +97,18 @@
             view.ui.add(editor, "top-right");
             
             var layerList = new LayerList({
+                container: document.createElement("div"),
                 view: view
             });
             
-            // Adds widget below other elements in the top right corner of the view
-            view.ui.add(layerList, {
-                position: "top-right"
-            });
+            var layerListExpand = new Expand({
+                expandIconClass: "esri-icon-layer-list",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
+                // expandTooltip: "Expand LayerList", // optional, defaults to "Expand" for English locale
+                view: view,
+                content: layerList.domNode
+                });
+            
+            view.ui.add(layerListExpand, "top-right");
             
             view.ui.move("zoom", "top-left");
             
@@ -114,6 +120,7 @@
             view.ui.add(homeWidget, "top-left");
             
             var legend = new Legend({
+                container: document.createElement("div"),
                 view: view,
                 layerInfos: [
                   {
@@ -122,20 +129,34 @@
                   }
                 ]
               });
-
+            
+            var legendExpand = new Expand({
+                expandIconClass: "esri-icon-layers",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
+                // expandTooltip: "Expand LayerList", // optional, defaults to "Expand" for English locale
+                view: view,
+                content: legend.domNode
+                });
+        
             // Add Legend to the bottom right corner of the view
-            view.ui.add(legend, "bottom-left");
+            view.ui.add(legendExpand, "bottom-left");
             
             // function to instiante print service
-            view.when(function() {
+            var printer = view.when(function() {
                 var print = new Print({
                 view: view,
                 // specify your own print service
-                printServiceUrl: "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
+                printServiceUrl: "https://ARCPROD.TRPA.ORG/server/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
             });
+                
+            var printExpand = new Expand({
+                expandIconClass: "esri-icon-printer",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
+                // expandTooltip: "Expand LayerList", // optional, defaults to "Expand" for English locale
+                view: view,
+                content: printer.domNode
+                });
 
             // Add widget to the top right corner of the view
-            view.ui.add(print, "top-right");
+            view.ui.add(printExpand, "top-right");
             });
             
             
