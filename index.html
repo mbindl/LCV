@@ -29,10 +29,11 @@
             "esri/widgets/Legend",
             "esri/WebMap",
             "esri/widgets/Print",
-            "esri/widgets/AreaMeasurement2D"
+            "esri/widgets/AreaMeasurement2D",
+            "esri/widgets/ScaleBar"
             ], 
                 
-        function(Map, MapView, FeatureLayer, Expand, BasemapGallery, Search, Editor, TileLayer, LayerList, Home, Legend, WebMap, Print, AreaMeasurement2D) {
+        function(Map, MapView, FeatureLayer, Expand, BasemapGallery, Search, Editor, TileLayer, LayerList, Home, Legend, WebMap, Print, AreaMeasurement2D, ScaleBar) {
             
             var map = new Map({
                 basemap: "topo-vector"
@@ -220,7 +221,8 @@
                     // specify your own print service
                     printServiceUrl: "https://ARCPROD.TRPA.ORG/server/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
             });
-                
+            
+            // Create Print Button
             var printExpand = new Expand({
                 expandIconClass: "esri-icon-printer",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
                 // expandTooltip: "Expand LayerList", // optional, defaults to "Expand" for English locale
@@ -228,7 +230,7 @@
                 content: print.domNode
                 });
 
-            // Add widget to the top right corner of the view
+            // Add print widget to the top right corner of the view
             view.ui.add(printExpand, "top-right");
             });
             
@@ -253,7 +255,15 @@
             });
 
             // Add the basemap gallery button
-            view.ui.add(bgExpand, "bottom-left");    
+            view.ui.add(bgExpand, "bottom-left");   
+            
+            var scaleBar = new ScaleBar({
+              view: view
+            });
+            // Add widget to the bottom left corner of the view
+            view.ui.add(scaleBar, {
+              position: "bottom-right"
+            });
       });
     </script>
   </head>
