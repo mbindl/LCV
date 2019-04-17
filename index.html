@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/themes/dark-blue/main.css">
     <script src="https://js.arcgis.com/4.11/"></script>
     <script>
+        // Declare required widgets
         require([
             "esri/Map",
             "esri/views/MapView",
@@ -30,16 +31,19 @@
             "esri/WebMap",
             "esri/widgets/Print",
             "esri/widgets/AreaMeasurement2D",
+            "esri/widgets/DistanceMeasurement2D",
             "esri/widgets/ScaleBar"
             ], 
-                
-        function(Map, MapView, FeatureLayer, Expand, BasemapGallery, Search, Editor, TileLayer, LayerList, Home, Legend, WebMap, Print, AreaMeasurement2D, ScaleBar) {
+        // Function to Call widgets     
+        function(Map, MapView, FeatureLayer, Expand, BasemapGallery, Search, Editor, TileLayer, LayerList, Home, Legend, WebMap, Print, AreaMeasurement2D, DistanceMeasurement2D, ScaleBar) {
             
+            // Create Map
             var map = new Map({
                 basemap: "topo-vector"
                 
             });
-
+            
+            // Create Map View div
             var view = new MapView({
                 container: "viewDiv",
                 map: map,
@@ -47,6 +51,7 @@
                 zoom: 10
             });
             
+            // Construct LCV Feature Layer
             const lcvLayer = new FeatureLayer({
                 url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/0",
                 outFields: ["*"],
@@ -54,6 +59,7 @@
                 id: "Verified Land Capability"
             });
             
+            // Construct Set Back Feature Layer
             const setbackLayer = new FeatureLayer({
                 url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/1",
                 outFields: ["*"],
@@ -61,7 +67,7 @@
                 id: "Set Back"
             });
             
-                        
+            // Construct Backshore Layer 
             const backshoreLayer = new FeatureLayer({
                 url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/2",
                 outFields: ["*"],
@@ -77,12 +83,14 @@
                 }
               }
 
-            // Create the layer and set the renderer
+            // Create Parcel Layer
             var parcels = new FeatureLayer({
                 url: "https://maps.trpa.org/server/rest/services/Parcels/MapServer/0",
                 outFields: ["*"],
                 popupTemplate: popupParcels
             });
+            
+            // Create Hillsahde Tile Layer
             var hillshadeLayer = new TileLayer({
                 url: "https://maps.trpa.org/server/rest/services/Tahoe_Hillshade_cached/MapServer",
                 opacity: 0.75,
@@ -144,13 +152,30 @@
             
             var measureExpand = new Expand({
                 expandIconClass: "esri-icon-polygon",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
-                expandTooltip: "Measure",
+                expandTooltip: "Measure Area",
                 view: view,
                 content: measurementWidget.domNode
             });
             
             // Add Measure Button
             view.ui.add(measureExpand, "top-right");
+            
+            // To add the DistanceMeasurement2D widget to the map
+            var distanceWidget = new DistanceMeasurement2D({
+                container: document.createElement("div"),
+                view: view
+            });
+            
+            // Create Meassure Distance Button
+            var distanceExpand = new Expand({
+                expandIconClass: "esri-icon-polyline",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
+                expandTooltip: "Measure Distance",
+                view: view,
+                content: distanceWidget.domNode
+            });
+            
+            // Add Button for meassureing Distance
+            view.ui.add(distanceExpand, "top-right");
              
             // function to create print service
             view.when(function() {
