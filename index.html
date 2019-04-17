@@ -112,7 +112,7 @@
             
             var editorExpand = new Expand({
                 expandIconClass: "esri-icon-sketch-rectangle",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
-                // expandTooltip: "Expand Editor", // optional, defaults to "Expand" for English locale
+                expandTooltip: "Editor",
                 view: view,
                 content: editor.domNode
             });
@@ -129,7 +129,7 @@
             // Create collapasable button for Table of Contents
             var layerListExpand = new Expand({
                 expandIconClass: "esri-icon-layer-list",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
-                // expandTooltip: "Expand LayerList", // optional, defaults to "Expand" for English locale
+                expandTooltip: "Layer List",
                 view: view,
                 content: layerList.domNode
                 });
@@ -144,7 +144,7 @@
             
             var measureExpand = new Expand({
                 expandIconClass: "esri-icon-polygon",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
-                // expandTooltip: "Expand LayerList", // optional, defaults to "Expand" for English locale
+                expandTooltip: "Measure",
                 view: view,
                 content: measurementWidget.domNode
             });
@@ -164,7 +164,7 @@
             // Create Print Button
             var printExpand = new Expand({
                 expandIconClass: "esri-icon-printer",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
-                // expandTooltip: "Expand LayerList", // optional, defaults to "Expand" for English locale
+                expandTooltip: "Print",
                 view: view,
                 content: print.domNode
                 });
@@ -233,7 +233,7 @@
             // Create Legend button
             var legendExpand = new Expand({
                 expandIconClass: "esri-icon-layers",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
-                // expandTooltip: "Expand LayerList", // optional, defaults to "Expand" for English locale
+                expandTooltip: "Expand Legend",
                 view: view,
                 content: legend.domNode
                 });
@@ -257,6 +257,7 @@
             // property to the DOM node of the basemap gallery widget
             var bgExpand = new Expand({
                 expandIconClass: "esri-icon-basemap",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font
+                expandTooltip: "Expand Basemap Gallery",
                 view: view,
                 content: basemapGallery.domNode
             });
