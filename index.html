@@ -147,7 +147,8 @@
             // To add the AreaMeasurement2D widget to your map
             var measurementWidget = new AreaMeasurement2D({
                 container: document.createElement("div"),
-                view: view
+                view: view,
+                unit: "acres"
             });
             
             var measureExpand = new Expand({
@@ -163,7 +164,8 @@
             // To add the DistanceMeasurement2D widget to the map
             var distanceWidget = new DistanceMeasurement2D({
                 container: document.createElement("div"),
-                view: view
+                view: view,
+                unit: "feet"
             });
             
             // Create Meassure Distance Button
