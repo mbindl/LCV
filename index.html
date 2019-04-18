@@ -53,7 +53,7 @@
             
             // Construct LCV Feature Layer
             const lcvLayer = new FeatureLayer({
-                url: "https://maps.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/0",
+                url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/0",
                 outFields: ["*"],
                 popupEnabled: false,
                 id: "Verified Land Capability"
@@ -61,7 +61,7 @@
             
             // Construct Set Back Feature Layer
             const setbackLayer = new FeatureLayer({
-                url: "https://maps.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/1",
+                url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/1",
                 outFields: ["*"],
                 popupEnabled: false,
                 id: "Set Back"
@@ -69,7 +69,7 @@
             
             // Construct Backshore Layer 
             const backshoreLayer = new FeatureLayer({
-                url: "https://maps.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/2",
+                url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/2",
                 outFields: ["*"],
                 popupEnabled: false,
                 id: "Backshore Boundary"
@@ -90,6 +90,13 @@
                 popupTemplate: popupParcels
             });
             
+            // Create Slope Tile Layer
+            var slopeLayer = new TileLayer({
+                url: "https://arcprod.trpa.org/server/rest/services/SlopeClasses_cached/MapServer",
+                opacity: 0.75,
+                id: "Hillshade"
+            });
+            
             // Create Hillsahde Tile Layer
             var hillshadeLayer = new TileLayer({
                 url: "https://maps.trpa.org/server/rest/services/Tahoe_Hillshade_cached/MapServer",
@@ -105,6 +112,9 @@
             
             // Add the layer
             map.add(backshoreLayer,2)
+            
+            // Add the layer
+            map.add(slopeLayer);
             
             // Add the layer
             map.add(hillshadeLayer);
