@@ -43,7 +43,7 @@
                 
             });
             
-            // Create Map View div
+            // Create Map View and add it to the viewDiv container
             var view = new MapView({
                 container: "viewDiv",
                 map: map,
@@ -53,7 +53,7 @@
             
             // Construct LCV Feature Layer
             const lcvLayer = new FeatureLayer({
-                url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/0",
+                url: "https://maps.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/0",
                 outFields: ["*"],
                 popupEnabled: false,
                 id: "Verified Land Capability"
@@ -61,7 +61,7 @@
             
             // Construct Set Back Feature Layer
             const setbackLayer = new FeatureLayer({
-                url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/1",
+                url: "https://maps.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/1",
                 outFields: ["*"],
                 popupEnabled: false,
                 id: "Set Back"
@@ -69,7 +69,7 @@
             
             // Construct Backshore Layer 
             const backshoreLayer = new FeatureLayer({
-                url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/2",
+                url: "https://maps.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/2",
                 outFields: ["*"],
                 popupEnabled: false,
                 id: "Backshore Boundary"
