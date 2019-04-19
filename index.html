@@ -94,7 +94,7 @@
             });
             
             var water = new FeatureLayer({
-                url: "https://maps.trpa.org/server/rest/services/LandCapability_BaseMap/MapServer/1",
+                url: "https://maps.trpa.org/server/rest/services/LandCapability_BaseMap/MapServer/2",
                 outFields: ["*"],
             });
             
@@ -150,7 +150,7 @@
             // Creaete Table of Contents
             var layerList = new LayerList({
                 container: document.createElement("div"),
-                view: view,
+                view: view,  
 //                listItemCreatedFunction: function (event) {
 //                    const item = event.item;
 //                    item.panel = {
@@ -158,34 +158,35 @@
 //                      open: true
 //                    };
 //                },
-//                showLegend: true,     
-                layers: [{  
-                    layer: lcvLayer,  
-                                title: "Verified Land Capability",  
+//                showLegend: true,
+                layers: [
+                    {  
+                    layer: lcvLayer,
+                    title: "Verified Land Capability",  
                     },  
                     {  
                     layer: setbackLayer,  
-                                title: "Setback",  
+                    title: "Setback",  
                     },  
                     {  
                     layer: backshoreLayer,  
-                                title:"Backshore Boundary"  
+                    title:"Backshore Boundary"  
                     },  
                     {  
                     layer: parcels,  
-                                title:"Parcels"  
+                    title:"Parcels"  
                     },  
                     {  
                     layer: water,  
-                                title:"Water"  
+                    title:"Water"  
                     },
-                                            {  
+                    {  
                     layer: slopeLayer,  
-                                title:"Slope"  
+                    title:"Slope"  
                     },
-                                            {  
+                    {  
                     layer: hillshadeLayer,  
-                                title:"Hillshade"  
+                    title:"Hillshade"  
                     }] 
             });
             
@@ -292,34 +293,34 @@
             var legend = new Legend({
                 container: document.createElement("div"),
                 view: view,
+//                style: "card",
                 layerInfos: [
-                    {
+                    {  
                     layer: lcvLayer,
-                    title: "Verified Land Capability"
+                    title: "Verified Land Capability",  
+                    },  
+                    {  
+                    layer: setbackLayer,  
+                    title: "Setback",  
+                    },  
+                    {  
+                    layer: backshoreLayer,  
+                    title: "Backshore Boundary"  
+                    },  
+                    {  
+                    layer: parcels,  
+                    title: "Parcels"  
+                    },  
+                    {  
+                    layer: water,  
+                    title: "Water"  
                     },
-                    {
-                    layer: setbackLayer,
-                    title: "Set Back"
-                    },
-                    {
-                    layer: backshoreLayer,
-                    title: "Backshore Boundary"
-                    },
-                    {
-                    layer: slopeLayer,
-                    title: "Slope Classes"
-                    },
-                    {
-                    layer: parcels,
-                    title: "Parcels"
+                    {  
+                    layer: slopeLayer,  
+                    title: "Slope"  
                     }
                 ]
             });
-            
-//            legend.style = {
-//              type: "card",
-//              layout: "auto"
-//            };
             
             // Create Legend button
             var legendExpand = new Expand({
