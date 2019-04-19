@@ -204,7 +204,7 @@
             var measurementWidget = new AreaMeasurement2D({
                 container: document.createElement("div"),
                 view: view,
-                unit: "acres"
+                unit: "square-feet"
             });
             
             var measureExpand = new Expand({
@@ -241,7 +241,8 @@
                     container: document.createElement("div"),
                     view: view,
                     // specify your own print service
-                    printServiceUrl: "https://ARCPROD.TRPA.ORG/server/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
+                   printServiceUrl:"https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
+
             });
             
             // Create Print Button
