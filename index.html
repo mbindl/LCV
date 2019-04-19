@@ -62,7 +62,6 @@
                 url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/0",
                 outFields: ["*"],
                 popupEnabled: false,
-                id: "Verified Land Capability"
             });
             
             // Construct Set Back Feature Layer
@@ -70,7 +69,6 @@
                 url: "https://maps.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/1",
                 outFields: ["*"],
                 popupEnabled: false,
-                id: "Set Back"
             });
             
             // Construct Backshore Layer 
@@ -78,7 +76,6 @@
                 url: "https://maps.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/2",
                 outFields: ["*"],
                 popupEnabled: false,
-                id: "Backshore Boundary"
             });
             
             // Define a popup for Trails
@@ -104,17 +101,13 @@
             // Create Slope Tile Layer
             var slopeLayer = new TileLayer({
                 url: "https://maps.trpa.org/server/rest/services/SlopeClasses_cached/MapServer",
-                mode: FeatureLayer.MODE_ONDEMAND,
-                visible: true,
                 opacity: 0.75,
-                id: "Slope"
             });
             
             // Create Hillsahde Tile Layer
             var hillshadeLayer = new TileLayer({
                 url: "https://maps.trpa.org/server/rest/services/Tahoe_Hillshade_cached/MapServer",
                 opacity: 0.75,
-                id: "Hillshade"
             });
 
             // Add the layer
