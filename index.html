@@ -62,23 +62,30 @@
             var measureThisAction = {
               title: "Measure Area",
               id: "measure-this",
-              image: "esri-icon-polygon"
+              image: "/assets/measure_area.png"
             };
 
-            var template = {
+            var popupLCV = {
               // autocasts as new PopupTemplate()
-              title: "Land Capability: ",
-              content: "{LCV_IPES}",
+              title: "Polygon Information: ",
+              content: "Land Capability: {LCV_IPES}",
               actions: [measureThisAction]
             };
-
+            
+            // create a number with commas
+            function numberWithCommas(x) {
+                var parts = x.toString().split(".");
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                return parts.join(".");
+            }
+            
             // Execute each time the "Measure Length" is clicked
             function measureThis() {
               var geom = view.popup.selectedFeature.geometry;
               var area = geometryEngine.planarArea(geom, "square-feet");
-              area = parseFloat(Math.round(area * 100) / 100).toFixed(2);
+              area = numberWithCommas(parseFloat(Math.round(area * 100) / 100).toFixed(2));
               view.popup.content =
-                view.popup.selectedFeature.attributes.LCV_IPES +
+                "Land Capability: " + view.popup.selectedFeature.attributes.LCV_IPES +
                 "<div style='background-color:black;color:white'>" +
                 area +
                 " sq. ft.</div>";
@@ -92,11 +99,14 @@
               }
             });
             
+            // hides zoomTo action from popup
+            view.popup.viewModel.actions.getItemAt(0).visible = false;
+            
             // Construct LCV Feature Layer
             var lcvLayer = new FeatureLayer({
                 url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/0",
                 outFields: ["*"],
-                popupTemplate: template
+                popupTemplate: popupLCV
             });
             
             // Construct Set Back Feature Layer
@@ -115,11 +125,31 @@
             
             // Define a popup for Trails
             var popupParcels = {
-                "title": "Parcel Information",
-                "content": function(){
-                   return "APN: {APN}";
-                }
-              }
+                title: "Parcel Information",
+                content: [
+                        {
+                        type: "fields",
+                        fieldInfos: [
+                            {
+                              fieldName: "APN", // The field whose values you want to format
+                              label: "APN: "
+                            },
+                            {
+                              fieldName: "JURISDICTION", // The field whose values you want to format
+                              label: "Jurisdiction: ",
+                            },
+                            {
+                              fieldName: "PARCEL_SQFt", // The field whose values you want to format
+                              label: "Area: ", 
+                              format: {
+                                digitSeparator: true, // Uses a comma separator in numbers >999
+                                places: 0 // Sets the number of decimal places to 0 and rounds up
+                                }
+                            }
+                            ]
+                        }
+                    ]
+                };
             
             // Create Parcel Layer
             var parcels = new FeatureLayer({
