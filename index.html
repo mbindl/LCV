@@ -79,7 +79,7 @@
                 return parts.join(".");
             }
             
-            // Execute each time the "Measure Length" is clicked
+            // Execute each time the "Measure Area" is clicked
             function measureThis() {
               var geom = view.popup.selectedFeature.geometry;
               var area = geometryEngine.planarArea(geom, "square-feet");
@@ -114,6 +114,7 @@
                 url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/1",
                 outFields: ["*"],
                 popupEnabled: false,
+                visible: false
             });
             
             // Construct Backshore Layer 
@@ -121,6 +122,7 @@
                 url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/2",
                 outFields: ["*"],
                 popupEnabled: false,
+                visible: false
             });
             
             // Define a popup for Trails
@@ -137,6 +139,18 @@
                             {
                               fieldName: "JURISDICTION", // The field whose values you want to format
                               label: "Jurisdiction: ",
+                            },
+                            {
+                              fieldName: "APO_ADDRESS", // The field whose values you want to format
+                              label: "Address: ",
+                            },
+                            {
+                              fieldName: "OWNERSHIP_TYPE", // The field whose values you want to format
+                              label: "Ownership Type: ",
+                            },
+                            {
+                              fieldName: "TRPA_LANDUSE_DESCRIPTION", // The field whose values you want to format
+                              label: "Land Use: ",
                             },
                             {
                               fieldName: "PARCEL_SQFt", // The field whose values you want to format
@@ -158,21 +172,48 @@
                 popupTemplate: popupParcels
             });
             
-            var water = new FeatureLayer({
+            var impervious = new FeatureLayer({
+                url: "https://maps.trpa.org/server/rest/services/LandCapability_BaseMap/MapServer/1",
+                outFields: ["*"],
+                visible: false
+            });
+            
+            var contour = new FeatureLayer({
                 url: "https://maps.trpa.org/server/rest/services/LandCapability_BaseMap/MapServer/2",
                 outFields: ["*"],
+                visible: false
+            });
+            
+            var water = new FeatureLayer({
+                url: "https://maps.trpa.org/server/rest/services/LandCapability_BaseMap/MapServer/3",
+                outFields: ["*"],
+                visible: false
+            });
+            
+            var nrcsLandCap = new FeatureLayer({
+                url: "https://maps.trpa.org/server/rest/services/LandCapability_BaseMap/MapServer/7",
+                outFields: ["*"],
+                visible: false
+            });
+            
+            var nrcsSoils = new FeatureLayer({
+                url: "https://maps.trpa.org/server/rest/services/LandCapability_BaseMap/MapServer/8",
+                outFields: ["*"],
+                visible: false
             });
             
             // Create Slope Tile Layer
             var slopeLayer = new TileLayer({
                 url: "https://maps.trpa.org/server/rest/services/SlopeClasses_cached/MapServer",
                 opacity: 0.75,
+                visible: false
             });
             
             // Create Hillsahde Tile Layer
             var hillshadeLayer = new TileLayer({
                 url: "https://maps.trpa.org/server/rest/services/Tahoe_Hillshade_cached/MapServer",
                 opacity: 0.75,
+                visible: false
             });
 
             // Add the layer
@@ -194,7 +235,20 @@
             map.add(parcels,0);
             
             // Add the layer
-            map.add(water,1);
+            map.add(impervious,1);
+            
+            // Add the layer
+            map.add(contour,2);
+            
+            // Add the layer
+            map.add(water,3);
+            
+            // Add the layer
+            map.add(nrcsLandCap,7);
+            
+            // Add the layer
+            map.add(nrcsSoils,8);
+            
             
             // Create Editor widget
             var editor = new Editor({
@@ -235,15 +289,31 @@
                     },  
                     {  
                     layer: backshoreLayer,  
-                    title:"Backshore Boundary"  
+                    title:"Backshore Boundary", 
                     },  
                     {  
                     layer: parcels,  
                     title:"Parcels"  
-                    },  
+                    },
+                    {  
+                    layer: impervious,  
+                    title:"Impervious Surface"  
+                    },
+                    {  
+                    layer: contour,  
+                    title:"Water"  
+                    },
                     {  
                     layer: water,  
                     title:"Water"  
+                    },
+                    {  
+                    layer: nrcsLandCap,  
+                    title:"NRCS Land Capability 2007"  
+                    },
+                    {  
+                    layer: nrcsSoils,  
+                    title:"NRCS Soils 2003"  
                     },
                     {  
                     layer: slopeLayer,  
