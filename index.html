@@ -32,10 +32,11 @@
             "esri/widgets/Print",
             "esri/widgets/AreaMeasurement2D",
             "esri/widgets/DistanceMeasurement2D",
+            "esri/geometry/geometryEngine",
             "esri/widgets/ScaleBar"
             ], 
         // Function to Call widgets     
-        function(Map, MapView, FeatureLayer, Expand, BasemapGallery, Search, Editor, TileLayer, LayerList, Home, Legend, WebMap, Print, AreaMeasurement2D, DistanceMeasurement2D, ScaleBar) {
+        function(Map, MapView, FeatureLayer, Expand, BasemapGallery, Search, Editor, TileLayer, LayerList, Home, Legend, WebMap, Print, AreaMeasurement2D, DistanceMeasurement2D, geometryEngine, ScaleBar) {
             
 //            var webmap = new WebMap({
 //              portalItem: {
@@ -57,11 +58,45 @@
                 zoom: 10
             });
             
+            // Add this action to the popup so it is always available in this view
+            var measureThisAction = {
+              title: "Measure Area",
+              id: "measure-this",
+              image: "esri-icon-polygon"
+            };
+
+            var template = {
+              // autocasts as new PopupTemplate()
+              title: "Land Capability: ",
+              content: "{LCV_IPES}",
+              actions: [measureThisAction]
+            };
+
+            // Execute each time the "Measure Length" is clicked
+            function measureThis() {
+              var geom = view.popup.selectedFeature.geometry;
+              var area = geometryEngine.planarArea(geom, "square-feet");
+              area = parseFloat(Math.round(area * 100) / 100).toFixed(2);
+              view.popup.content =
+                view.popup.selectedFeature.attributes.LCV_IPES +
+                "<div style='background-color:black;color:white'>" +
+                area +
+                " sq. ft.</div>";
+            }
+
+            // Event handler that fires each time an action is clicked.
+            view.popup.on("trigger-action", function(event) {
+              // Execute the measureThis() function if the measure-this action is clicked
+              if (event.action.id === "measure-this") {
+                measureThis();
+              }
+            });
+            
             // Construct LCV Feature Layer
             var lcvLayer = new FeatureLayer({
                 url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/0",
                 outFields: ["*"],
-                popupEnabled: false,
+                popupTemplate: template
             });
             
             // Construct Set Back Feature Layer
