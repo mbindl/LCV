@@ -26,6 +26,7 @@
             "esri/widgets/Editor",
             "esri/layers/TileLayer",
             "esri/widgets/LayerList",
+            "esri/widgets/LayerList/LayerListViewModel",
             "esri/widgets/Home",
             "esri/widgets/Legend",
             "esri/WebMap",
@@ -36,7 +37,7 @@
             "esri/widgets/ScaleBar"
             ], 
         // Function to Call widgets     
-        function(Map, MapView, FeatureLayer, Expand, BasemapGallery, Search, Editor, TileLayer, LayerList, Home, Legend, WebMap, Print, AreaMeasurement2D, DistanceMeasurement2D, geometryEngine, ScaleBar) {
+        function(Map, MapView, FeatureLayer, Expand, BasemapGallery, Search, Editor, TileLayer, LayerList, LayerListVM, Home, Legend, WebMap, Print, AreaMeasurement2D, DistanceMeasurement2D, geometryEngine, ScaleBar) {
             
 //            var webmap = new WebMap({
 //              portalItem: {
@@ -158,7 +159,7 @@
                             },
                             {
                               fieldName: "PARCEL_SQFt", // The field whose values you want to format
-                              label: "Area: ", 
+                              label: "Area (sq.ft.): ", 
                               format: {
                                 digitSeparator: true, // Uses a comma separator in numbers >999
                                 places: 0 // Sets the number of decimal places to 0 and rounds up
@@ -273,15 +274,81 @@
             // Creaete Table of Contents
             var layerList = new LayerList({
                 container: document.createElement("div"),
-                view: view,  
-//                listItemCreatedFunction: function (event) {
-//                    const item = event.item;
-//                    item.panel = {
-//                      content: "legend",
-//                      open: true
-//                    };
-//                },
-//                showLegend: true,
+                view: view, 
+                listItemCreatedFunction : function (event) {
+
+                // The event object contains properties of the
+                // layer in the LayerList widget
+                var item = event.item;
+
+                if (item.title === "SlopeClasses cached") {
+                    // open the list item in the LayerList
+                    item.open = false;
+                    // change the title to something more descriptive
+                    item.title = "Slope";
+                    }
+                if (item.title === "Tahoe Hillshade cached") {
+                    // open the list item in the LayerList
+                    item.open = false;
+                    // change the title to something more descriptive
+                    item.title = "Hillshade";
+                    }
+                if (item.title === "LandCapability BaseMap - Soils - NRCS 2003") {
+                    // open the list item in the LayerList
+                    item.open = false;
+                    // change the title to something more descriptive
+                    item.title = "Soils - NRCS 2003";
+                    }
+                if (item.title === "LandCapability BaseMap - Land Capability NRCS 2007") {
+                    // open the list item in the LayerList
+                    item.open = false;
+                    // change the title to something more descriptive
+                    item.title = "Land Capability - NRCS 2007";
+                    }
+                if (item.title === "LandCapability editable - Backshore Boundary") {
+                    // open the list item in the LayerList
+                    item.open = false;
+                    // change the title to something more descriptive
+                    item.title = "Backshore Boundary - Editable";
+                    }
+                if (item.title === "LandCapability editable - Setback") {
+                    // open the list item in the LayerList
+                    item.open = false;
+                    // change the title to something more descriptive
+                    item.title = "Setback - Editable";
+                    }
+                if (item.title === "LandCapability editable - Verified Land Capability") {
+                    // open the list item in the LayerList
+                    item.open = false;
+                    // change the title to something more descriptive
+                    item.title = "Verified Land Capability - Editable";
+                    }
+                if (item.title === "LandCapability BaseMap - Water") {
+                    // open the list item in the LayerList
+                    item.open = true;
+                    // change the title to something more descriptive
+                    item.title = "Water";
+                    }
+                if (item.title === "LandCapability BaseMap - 6,229ft - High Water Line") {
+                    // open the list item in the LayerList
+                    item.open = false;
+                    // change the title to something more descriptive
+                    item.title = "6,229ft - High Water Line";
+                    }
+                if (item.title === "LandCapability BaseMap - Impervious Surface - 2010 LiDAR") {
+                    // open the list item in the LayerList
+                    item.open = false;
+                    // change the title to something more descriptive
+                    item.title = "Impervious Surface - LiDAR 2010";
+                    }
+                if (item.title === "LandCapability BaseMap - Parcels") {
+                    // open the list item in the LayerList
+                    item.open = false;
+                    // change the title to something more descriptive
+                    item.title = "Parcels";
+                    }
+                },
+
                 layers: [
                     {  
                     layer: lcvLayer,
@@ -337,6 +404,7 @@
                 content: layerList.domNode
                 });
             
+
             view.ui.add(layerListExpand, "top-right");
             
             // To add the AreaMeasurement2D widget to your map
