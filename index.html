@@ -394,7 +394,7 @@
 
             view.ui.add(layerListExpand, "top-right");
             
-            // To add the AreaMeasurement2D widget to your map
+            // To add the AreaMeasurement2D widget to the map
             var measurementWidget = new AreaMeasurement2D({
                 container: document.createElement("div"),
                 view: view,
@@ -402,6 +402,7 @@
                 unit: "square-feet"
             });
             
+            // Create a button for the measurement widget
             var measureExpand = new Expand({
                 expandIconClass: "esri-icon-polygon",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
                 expandTooltip: "Measure Area",
@@ -435,8 +436,8 @@
                 var print = new Print({
                     container: document.createElement("div"),
                     view: view,
-                    // specify your own print service
-                   printServiceUrl:"https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
+                    // specify print service url
+                    printServiceUrl:"https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
 
             });
             
@@ -460,7 +461,7 @@
                 {
                   layer: parcels,
                   searchFields: ["APN"],
-                  displayField: "APN",
+                  displayField: "123-123-123",
                   exactMatch: false,
                   outFields: ["APN"],
                   name: "Parcel APN",
@@ -586,7 +587,7 @@
       <div class="overlay">
         <div class="overlay-inner">
           <div class="message">
-            <p>This is the <b>Land Capability Verification Editor</b> web application. This app is used to record <abbr title="Land Capability Verification">LCV</abbr>information. Use the tools in the upper right hand corner to record verified land capability polygons, turn on more layers, measure area and distances, or print out a map. Visit TRPA's <a href="http://www.trpa.org/permitting/land-coverage/" style="color:#69dcff">land coverage regulation</a> website for more information.</p>
+            <p>This is the <b>Land Capability Verification Editor</b>. Use the tools in the upper right hand corner to <b>edit</b> <abbr title="Land Capability Verification">LCV </abbr>polygons, <b>visualize</b> layers, <b>meassure</b> area and distance, or <b>print</b> out a <abbr title="Land Capability Verification">LCV </abbr>map. Visit the <abbr title="Tahoe Regional Planning Agency">TRPA</abbr>'s  <a href="http://www.trpa.org/permitting/land-coverage/" style="color:#69dcff">land coverage regulation</a> website for more information.</p>
           </div>
         </div>
     </div>

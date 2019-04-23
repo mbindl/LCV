@@ -15,7 +15,7 @@ html, body, #viewDiv {
   display:table;
   background:rgba(0,0,0,0.8);
   -webkit-animation: splash 20s forwards; 
-  animation: splash 20s forwards;
+  animation: splash 15s forwards;
 }
 
 .overlay-inner {
@@ -26,13 +26,12 @@ html, body, #viewDiv {
 
 .message {
   border:5px solid #69dcff;
-  border-radius: 5px;
+  border-radius: 10px;
   background:rgba(0,0,0,0.8);
   display:inline-block;
   vertical-align:middle;
   width:50%;
   text-align:left;
-  text-decoration-color: aqua;
   font-family: "Avenir Next W00";
   color: white;
   padding:10px;
