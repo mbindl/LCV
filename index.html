@@ -4,19 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Land Capability Verification Editor</title>
-    <style>
-      html, body, #viewDiv {
-        padding: 0;
-        margin: 0;
-        height: 100%;
-        width: 100%;
-      }
-    </style>
+    <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/themes/dark-blue/main.css">
     <script src="https://js.arcgis.com/4.11/"></script>
     <script>
         // Declare required widgets
-        require([
+        require([ 
             "esri/Map",
             "esri/views/MapView",
             "esri/layers/FeatureLayer",
@@ -34,21 +27,15 @@
             "esri/widgets/AreaMeasurement2D",
             "esri/widgets/DistanceMeasurement2D",
             "esri/geometry/geometryEngine",
-            "esri/widgets/ScaleBar"
+            "esri/widgets/ScaleBar",
+            "dojo/domReady!"
             ], 
         // Function to Call widgets     
         function(Map, MapView, FeatureLayer, Expand, BasemapGallery, Search, Editor, TileLayer, LayerList, LayerListVM, Home, Legend, WebMap, Print, AreaMeasurement2D, DistanceMeasurement2D, geometryEngine, ScaleBar) {
-            
-//            var webmap = new WebMap({
-//              portalItem: {
-//                id: "588261ff6fdd4d2ca2fa3aee96472e36"
-//              }
-//            });
-            
+
             // Create Map
             var map = new Map({
                 basemap: "topo-vector"
-                
             });
             
             // Create Map View and add it to the viewDiv container
@@ -86,7 +73,7 @@
             // Execute each time the "Measure Area" is clicked
             function measureThis() {
               var geom = view.popup.selectedFeature.geometry;
-              var area = geometryEngine.planarArea(geom, "square-feet");
+              var area = geometryEngine.geodesicArea(geom, "square-feet");
               area = numberWithCommas(parseFloat(Math.round(area * 100) / 100).toFixed(2));
               view.popup.content =
                 "Land Capability: " + view.popup.selectedFeature.attributes.LCV_IPES +
@@ -158,7 +145,7 @@
                               label: "Land Use: ",
                             },
                             {
-                              fieldName: "PARCEL_SQFt", // The field whose values you want to format
+                              fieldName: "PARCEL_SQFT", // The field whose values you want to format
                               label: "Area (sq.ft.): ", 
                               format: {
                                 digitSeparator: true, // Uses a comma separator in numbers >999
@@ -411,6 +398,7 @@
             var measurementWidget = new AreaMeasurement2D({
                 container: document.createElement("div"),
                 view: view,
+                mode: "geodesic",
                 unit: "square-feet"
             });
             
@@ -595,5 +583,12 @@
   </head>
   <body>
     <div id="viewDiv"></div>
+      <div class="overlay">
+        <div class="overlay-inner">
+          <div class="message">
+            <p>This is the <b>Land Capability Verification Editor</b> web application. This app is used to record <abbr title="Land Capability Verification">LCV</abbr>information. Use the tools in the upper right hand corner to record verified land capability polygons, turn on more layers, measure area and distances, or print out a map. Visit TRPA's <a href="http://www.trpa.org/permitting/land-coverage/" style="color:#69dcff">land coverage regulation</a> website for more information.</p>
+          </div>
+        </div>
+    </div>
   </body>
 </html>
