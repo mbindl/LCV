@@ -12,6 +12,7 @@
         require([ 
             "esri/Map",
             "esri/views/MapView",
+            "esri/Viewpoint",
             "esri/layers/FeatureLayer",
             "esri/widgets/Expand",
             "esri/widgets/BasemapGallery",
@@ -31,7 +32,7 @@
             "dojo/domReady!"
             ], 
         // Function to Call widgets     
-        function(Map, MapView, FeatureLayer, Expand, BasemapGallery, Search, Editor, TileLayer, LayerList, LayerListVM, Home, Legend, WebMap, Print, AreaMeasurement2D, DistanceMeasurement2D, geometryEngine, ScaleBar) {
+        function(Map, MapView, Viewpoint, FeatureLayer, Expand, BasemapGallery, Search, Editor, TileLayer, LayerList, LayerListVM, Home, Legend, WebMap, Print, AreaMeasurement2D, DistanceMeasurement2D, geometryEngine, ScaleBar) {
 
             // Create Map
             var map = new Map({
@@ -42,8 +43,8 @@
             var view = new MapView({
                 container: "viewDiv",
                 map: map,
-                center: [-120.0325,39.0],
-                zoom: 10,
+                center: [-120.015,38.925],
+                zoom: 13,
                 popup: {
                     actionsMenuEnabled: false
                     }
@@ -53,9 +54,12 @@
             var measureThisAction = {
               title: "Measure Area",
               id: "measure-this",
-              image: "/assets/measure_area.png"
+              // Sets the icon font used to style the action button
+              className: "esri-icon-polygon"
+              // image: "/assets/measure_area.png"
             };
-
+            
+            // Land Capability Popup template
             var popupLCV = {
               // autocasts as new PopupTemplate()
               title: "Polygon Information: ",
@@ -93,31 +97,7 @@
             // hides zoomTo action from popup
             view.popup.viewModel.actions.getItemAt(0).visible = false;
             
-            // Construct LCV Feature Layer
-            var lcvLayer = new FeatureLayer({
-                url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/0",
-                outFields: ["*"],
-                opacity: 0.75,
-                popupTemplate: popupLCV
-            });
-            
-            // Construct Set Back Feature Layer
-            var setbackLayer = new FeatureLayer({
-                url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/1",
-                outFields: ["*"],
-                popupEnabled: false,
-                visible: false
-            });
-            
-            // Construct Backshore Layer 
-            var backshoreLayer = new FeatureLayer({
-                url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/2",
-                outFields: ["*"],
-                popupEnabled: false,
-                visible: false
-            });
-            
-            // Define a popup for Trails
+            // Define a popup for Parcels
             var popupParcels = {
                 title: "Parcel Information",
                 content: [
@@ -177,7 +157,7 @@
             });
             
             var water = new FeatureLayer({
-                url: "https://maps.trpa.org/server/rest/services/LandCapability_BaseMap/MapServer/3",
+                url: "https://maps.trpa.org/server/rest/services/LandCapability_BaseMap/MapServer/4",
                 outFields: ["*"],
                 visible: false
             });
@@ -193,7 +173,7 @@
                 outFields: ["*"],
                 visible: false
             });
-            
+                        
             // Create Slope Tile Layer
             var slopeLayer = new TileLayer({
                 url: "https://maps.trpa.org/server/rest/services/SlopeClasses_cached/MapServer",
@@ -207,7 +187,31 @@
                 opacity: 0.75,
                 visible: false
             });
-
+            
+            // Construct LCV Feature Layer
+            var lcvLayer = new FeatureLayer({
+                url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/0",
+                outFields: ["*"],
+                opacity: 0.75,
+                popupTemplate: popupLCV
+            });
+            
+            // Construct Set Back Feature Layer
+            var setbackLayer = new FeatureLayer({
+                url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/1",
+                outFields: ["*"],
+                popupEnabled: false,
+                visible: false
+            });
+            
+            // Construct Backshore Layer 
+            var backshoreLayer = new FeatureLayer({
+                url: "https://arcprod.trpa.org/server/rest/services/LandCapability_editable/FeatureServer/2",
+                outFields: ["*"],
+                popupEnabled: false,
+                visible: false
+            });
+            
             // Add the layer
             map.add(lcvLayer,0)
             
@@ -252,6 +256,7 @@
                 expandIconClass: "esri-icon-sketch-rectangle",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
                 expandTooltip: "Editor",
                 view: view,
+                autoCollapse: true,
                 content: editor.domNode
             });
             
@@ -310,11 +315,11 @@
                     // change the title to something more descriptive
                     item.title = "Verified Land Capability - Editable";
                     }
-                if (item.title === "LandCapability BaseMap - Water") {
+                if (item.title === "LandCapability BaseMap - Stream Environment Zone (LiDAR derived)") {
                     // open the list item in the LayerList
                     item.open = true;
                     // change the title to something more descriptive
-                    item.title = "Water";
+                    item.title = "Stream Environment Zone";
                     }
                 if (item.title === "LandCapability BaseMap - 6,229ft - High Water Line") {
                     // open the list item in the LayerList
@@ -388,6 +393,7 @@
                 expandIconClass: "esri-icon-layer-list",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
                 expandTooltip: "Layer List",
                 view: view,
+                autoCollapse: true,
                 content: layerList.domNode
                 });
             
@@ -398,6 +404,7 @@
             var measurementWidget = new AreaMeasurement2D({
                 container: document.createElement("div"),
                 view: view,
+                destroy: true,
                 mode: "geodesic",
                 unit: "square-feet"
             });
@@ -407,6 +414,7 @@
                 expandIconClass: "esri-icon-polygon",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
                 expandTooltip: "Measure Area",
                 view: view,
+                autoCollapse: true,
                 content: measurementWidget.domNode
             });
             
@@ -425,6 +433,7 @@
                 expandIconClass: "esri-icon-polyline",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
                 expandTooltip: "Measure Distance",
                 view: view,
+                autoCollapse: true,
                 content: distanceWidget.domNode
             });
             
@@ -446,6 +455,7 @@
                 expandIconClass: "esri-icon-printer",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
                 expandTooltip: "Print",
                 view: view,
+                autoCollapse: true,
                 content: print.domNode
                 });
 
@@ -456,16 +466,16 @@
             // Create Search Widget
             var searchWidget = new Search({
               view: view,
-              allPlaceholder: "APN",
+              allPlaceholder: "Address or APN",
               sources: [
                 {
                   layer: parcels,
                   searchFields: ["APN"],
-                  displayField: "123-123-123",
+                  displayField: "APN",
                   exactMatch: false,
                   outFields: ["APN"],
                   name: "Parcel APN",
-                  placeholder: "123-123-123"
+                  placeholder: "APN"
                 }
               ]
             });
@@ -477,15 +487,15 @@
             
             // move zoom buttons to top left
             view.ui.move("zoom", "top-left");
-            
+                
             // Createa Home Button
             var homeWidget = new Home({
-              view: view
+                view: view
             });
-
+            
             // adds the home widget to the top left corner of the MapView
             view.ui.add(homeWidget, "top-left");
-            
+                        
             // Create Legend Widget
             var legend = new Legend({
                 container: document.createElement("div"),
