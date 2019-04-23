@@ -43,7 +43,7 @@
             var view = new MapView({
                 container: "viewDiv",
                 map: map,
-                center: [-120.015,38.925],
+                center: [-120.01,38.925],
                 zoom: 13,
                 popup: {
                     actionsMenuEnabled: false
@@ -62,7 +62,7 @@
             // Land Capability Popup template
             var popupLCV = {
               // autocasts as new PopupTemplate()
-              title: "Polygon Information: ",
+              title: "LCV Information",
               content: "Land Capability: {LCV_IPES}",
               actions: [measureThisAction]
             };
