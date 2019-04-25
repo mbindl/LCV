@@ -411,10 +411,11 @@
             // To add the AreaMeasurement2D widget to the map
             var measurementWidget = new AreaMeasurement2D({
                 container: document.createElement("div"),
-                view: view,
-                destroy: true,
-                mode: "geodesic",
-                unit: "square-feet"
+                viewModel: {
+                    view: view,
+                    mode: "geodesic",
+                    unit: "square-feet"
+                }
             });
             
             // Create a button for the measurement widget
@@ -432,8 +433,11 @@
             // To add the DistanceMeasurement2D widget to the map
             var distanceWidget = new DistanceMeasurement2D({
                 container: document.createElement("div"),
-                view: view,
-                unit: "feet"
+                viewModel: {
+                    view: view,
+                    mode: "geodesic",
+                    unit: "feet"
+                }
             });
             
             // Create Meassure Distance Button
