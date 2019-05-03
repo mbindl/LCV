@@ -551,9 +551,13 @@
             // setup active widget var to hold measurement interaction
             var activeWidget = null;
 
-            // add the toolbar for the measurement widgets
-            view.ui.add("measurebuttons", "bottom-right");
-
+            // add the area measurment widget
+            view.ui.add("areaButton", "bottom-right");
+            
+            // add the distance measure widget
+            view.ui.add("distanceButton", "bottom-right");
+            
+            // setup the actions and classes for the distance button            
             document
               .getElementById("distanceButton")
               .addEventListener("click", function() {
@@ -564,7 +568,8 @@
                   setActiveButton(null);
                 }
               });
-
+            
+            // setup the actions and classes for the area button
             document
               .getElementById("areaButton")
               .addEventListener("click", function() {
@@ -575,27 +580,34 @@
                   setActiveButton(null);
                 }
               });
-
+            
+            // fucntion to set the active widget on click 
             function setActiveWidget(type) {
               switch (type) {
                 case "distance":
                   activeWidget = new DistanceMeasurement2D({
-                    view: view,
-                    mode: "geodesic",
-                    unit: "feet"
+                    viewModel: {
+                        view: view,
+                        mode: "geodesic",
+                        unit: "feet"
+                    }
                   });
 
-                  // skip the initial 'new measurement' button
-                  activeWidget.viewModel.newMeasurement();
-
-                  view.ui.add(activeWidget, "top-right");
-                  setActiveButton(document.getElementById("distanceButton"));
+                    // skip the initial 'new measurement' button
+                    activeWidget.viewModel.newMeasurement();
+                    
+                    // add the widget window to the view on the bottom right
+                    view.ui.add(activeWidget, "bottom-right");
+                //
+                setActiveButton(document.getElementById("distanceButton"));
                   break;
                 case "area":
                   activeWidget = new AreaMeasurement2D({
-                    view: view,
-                    mode: "geodesic",
-                    unit: "square-feet"
+                    viewModel: {
+                        view: view,
+                        mode: "geodesic",
+                        unit: "square-feet"
+                    }
                   });
 
                   // skip the initial 'new measurement' button
@@ -628,20 +640,21 @@
             
             // Create Scale Bar Widget
             var scaleBar = new ScaleBar({
-              view: view
+                view: view,
+                container: "scaleposition"
             });
             
-            // Add widget to the bottom left corner of the view
-            view.ui.add(scaleBar, {
-              position: "bottom-right"
-            });
+//            // Add widget to the bottom left corner of the view
+//            view.ui.add(scaleBar, {
+//                position: "bottom-right"
+//            });
 
       });
     </script>
   </head>
   <body>
     <div id="viewDiv"></div>
-       <div id="measurebuttons">
+       <div id = "measurebuttons">
       <button
         class="action-button esri-icon-minus"
         id="distanceButton"
@@ -655,6 +668,7 @@
         title="Measure Area"
       ></button>
         </div>
+      <div id = "scaleposition"></div>
       <div class="overlay-wrap">
 		<input type="checkbox" name="hide" id="hide">
 		<label class="hide" for="hide">X</label>
