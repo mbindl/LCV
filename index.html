@@ -49,7 +49,7 @@
                     actionsMenuEnabled: false
                     }
             });
-            
+
             // Add this action to the popup so it is always available in this view
             var measureThisAction = {
               title: "Measure Area",
@@ -219,7 +219,7 @@
                 popupEnabled: false,
                 visible: false
             });
-            
+                        
             // Add the layer
             map.add(lcvLayer,0)
             
@@ -408,50 +408,6 @@
 
             view.ui.add(layerListExpand, "top-right");
             
-            // To add the AreaMeasurement2D widget to the map
-            var measurementWidget = new AreaMeasurement2D({
-                container: document.createElement("div"),
-                viewModel: {
-                    view: view,
-                    mode: "geodesic",
-                    unit: "square-feet"
-                }
-            });
-            
-            // Create a button for the measurement widget
-            var measureExpand = new Expand({
-                expandIconClass: "esri-icon-polygon",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
-                expandTooltip: "Measure Area",
-                view: view,
-                autoCollapse: true,
-                content: measurementWidget.domNode
-            });
-            
-            // Add Measure Button
-            view.ui.add(measureExpand, "top-right");
-            
-            // To add the DistanceMeasurement2D widget to the map
-            var distanceWidget = new DistanceMeasurement2D({
-                container: document.createElement("div"),
-                viewModel: {
-                    view: view,
-                    mode: "geodesic",
-                    unit: "feet"
-                }
-            });
-            
-            // Create Meassure Distance Button
-            var distanceExpand = new Expand({
-                expandIconClass: "esri-icon-polyline",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font/
-                expandTooltip: "Measure Distance",
-                view: view,
-                autoCollapse: true,
-                content: distanceWidget.domNode
-            });
-            
-            // Add Button for meassureing Distance
-            view.ui.add(distanceExpand, "top-right");
-             
             // function to create print service
             view.when(function() {
                 var print = new Print({
@@ -459,9 +415,8 @@
                     view: view,
                     // specify print service url
                     printServiceUrl:"https://maps.trpa.org/server/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
-
             });
-//                    "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
+                //                    "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
             
             // Create Print Button
             var printExpand = new Expand({
@@ -593,6 +548,84 @@
             // Add the basemap gallery button
             view.ui.add(bgExpand, "bottom-left");   
             
+            // setup active widget var to hold measurement interaction
+            var activeWidget = null;
+
+            // add the toolbar for the measurement widgets
+            view.ui.add("measurebuttons", "bottom-right");
+
+            document
+              .getElementById("distanceButton")
+              .addEventListener("click", function() {
+                setActiveWidget(null);
+                if (!this.classList.contains("active")) {
+                  setActiveWidget("distance");
+                } else {
+                  setActiveButton(null);
+                }
+              });
+
+            document
+              .getElementById("areaButton")
+              .addEventListener("click", function() {
+                setActiveWidget(null);
+                if (!this.classList.contains("active")) {
+                  setActiveWidget("area");
+                } else {
+                  setActiveButton(null);
+                }
+              });
+
+            function setActiveWidget(type) {
+              switch (type) {
+                case "distance":
+                  activeWidget = new DistanceMeasurement2D({
+                    view: view,
+                    mode: "geodesic",
+                    unit: "feet"
+                  });
+
+                  // skip the initial 'new measurement' button
+                  activeWidget.viewModel.newMeasurement();
+
+                  view.ui.add(activeWidget, "top-right");
+                  setActiveButton(document.getElementById("distanceButton"));
+                  break;
+                case "area":
+                  activeWidget = new AreaMeasurement2D({
+                    view: view,
+                    mode: "geodesic",
+                    unit: "square-feet"
+                  });
+
+                  // skip the initial 'new measurement' button
+                  activeWidget.viewModel.newMeasurement();
+
+                  view.ui.add(activeWidget, "top-right");
+                  setActiveButton(document.getElementById("areaButton"));
+                  break;
+                case null:
+                  if (activeWidget) {
+                    view.ui.remove(activeWidget);
+                    activeWidget.destroy();
+                    activeWidget = null;
+                  }
+                  break;
+              }
+            }
+
+            function setActiveButton(selectedButton) {
+              // focus the view to activate keyboard shortcuts for sketching
+              view.focus();
+              var elements = document.getElementsByClassName("active");
+              for (var i = 0; i < elements.length; i++) {
+                elements[i].classList.remove("active");
+              }
+              if (selectedButton) {
+                selectedButton.classList.add("active");
+              }
+            }
+            
             // Create Scale Bar Widget
             var scaleBar = new ScaleBar({
               view: view
@@ -602,11 +635,26 @@
             view.ui.add(scaleBar, {
               position: "bottom-right"
             });
+
       });
     </script>
   </head>
   <body>
     <div id="viewDiv"></div>
+       <div id="measurebuttons">
+      <button
+        class="action-button esri-icon-minus"
+        id="distanceButton"
+        type="button"
+        title="Measure Distance"
+      ></button>
+        <button
+        class="action-button esri-icon-polygon"
+        id="areaButton"
+        type="button"
+        title="Measure Area"
+      ></button>
+        </div>
       <div class="overlay-wrap">
 		<input type="checkbox" name="hide" id="hide">
 		<label class="hide" for="hide">X</label>
