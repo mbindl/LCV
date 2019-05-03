@@ -14,8 +14,8 @@ html, body, #viewDiv {
     height:100%;
     display:table;
     background:rgba(0,0,0,0.8);
-    -webkit-animation: splash 15s forwards; 
-    animation: splash 15s forwards;
+    -webkit-animation: splash 20s forwards; 
+    animation: splash 20s forwards;
 }
 
 .overlay-inner {
@@ -127,10 +127,10 @@ html, body, #viewDiv {
 	font-size:100%;
 	z-index:2;
 	cursor:pointer;
-	-webkit-animation:13s fadein 2s forwards;
-	-moz-animation:13s fadein 2s forwards;
-	-ms-animation:13s fadein 2s forwards;
-	animation:13s fadein 2s forwards;
+	-webkit-animation:15s fadein 2s forwards;
+	-moz-animation:15s fadein 2s forwards;
+	-ms-animation:15s fadein 2s forwards;
+	animation:15s fadein 2s forwards;
 }
 
 #hide {
