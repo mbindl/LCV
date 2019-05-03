@@ -547,7 +547,7 @@
             // property to the DOM node of the basemap gallery widget
             var bgExpand = new Expand({
                 expandIconClass: "esri-icon-basemap",  // see https://developers.arcgis.com/javascript/latest/guide/esri-icon-font
-                expandTooltip: "Expand Basemap Gallery",
+                expandTooltip: "Toggle Basemap",
                 view: view,
                 content: basemapToggle.domNode
             });
