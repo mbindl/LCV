@@ -615,7 +615,7 @@
                   activeWidget = new AreaMeasurement2D({
                     viewModel: {
                         view: view,
-                        mode: "geodesic",
+                        mode: "planar",
                         unit: "square-feet"
                         }
                     });
